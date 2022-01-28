@@ -33,8 +33,10 @@ api_key = ENV['HOLACASH_API_KEY']
 antifraud_metadata = { ip_address: '192.168.0.100', device_id: 'somedevice_123456', user_timezone: '-06:00' }
 
 if __FILE__ == $PROGRAM_NAME
+  # ---- imported from require_relative 'payment_token'
   create_payment_token_response = create_payment_token(CREATE_TOKEN_REQUEST, api_key, antifraud_metadata)
   token_id = create_payment_token_response['token_details']['token']
+  # ------------------
   create_charge_request = {
     description: 'This is a test description',
     amount_details: {
