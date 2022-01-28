@@ -7,7 +7,22 @@ require 'base64'
 require_relative 'transaction_w_credit_card'
 
 def capture_charge(transaction_id, body, api_key)
-  uri = URI("https://api-v2.sandbox.holacash.mx/v2/transaction/capture/#{transaction_id}")
+  uri = URI("https://api-v2.play.holacash.mx/v2/transaction/capture/#{transaction_id}")
+  request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+  request['X-Api-Client-Key'] = api_key
+  request.body = body.to_json
+
+  http = Net::HTTP.new(uri.hostname, uri.port)
+  http.use_ssl = true
+  response = http.request(request)
+
+  return JSON.parse(response.body) if response.is_a?(Net::HTTPSuccess)
+
+  raise "Server error #{response.body}"
+end
+
+def refund_charge(transaction_id, body, api_key)
+  uri = URI("https://api-v2.sandbox.holacash.mx/v2/transaction/refund/#{transaction_id}")
   request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   request['X-Api-Client-Key'] = api_key
   request.body = body.to_json
@@ -73,10 +88,18 @@ if __FILE__ == $PROGRAM_NAME
 
   transaction_id = create_charge_w_cc_response['id']
   puts "Capturing transaction_id=#{transaction_id}"
-  capture_charge_respnse = capture_charge(
+  capture_charge_response = capture_charge(
     transaction_id,
     { amount: 100, currency_code: 'MXN' },
     api_key
   )
-  puts "Charge captured: #{capture_charge_respnse}"
+  puts "Charge captured: #{capture_charge_response}"
+
+  puts "Issuing refund"
+  refund_charge_response = refund_charge(
+    transaction_id,
+    { amount: 100, currency_code: 'MXN' },
+    api_key
+  )
+  puts "Charge refunded: #{refund_charge_response}"
 end
