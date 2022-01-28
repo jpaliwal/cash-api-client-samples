@@ -37,7 +37,8 @@ end
 
 
 # Your API Key, if key type is secret (starts with skt) do NOT share it or use it in the frontend
-api_key = 'YOUR_API_KEY'
+# for the purposes of this script you can setup an env variable called HOLACASH_API_KEY
+api_key = ENV['HOLACASH_API_KEY']
 
 # Antifraud metadata
 # Check https://developers.holacash.mx/openapi/cashspa/#tag/tokenization for details on
@@ -45,35 +46,37 @@ api_key = 'YOUR_API_KEY'
 antifraud_metadata = { ip_address: '192.168.0.100', device_id: 'somedevice_123456', user_timezone: '-06:00' }
 
 # Create payment token input
-create_token_request = {
+CREATE_TOKEN_REQUEST = {
     credential: {
         payment_method: {
-            method: "credit_or_debit_card"
+            method: 'credit_or_debit_card'
         },
         credit_or_debit_card: {
-            card_number: "4242424242424242",
-            expiration_month: "12",
-            expiration_year: "2034",
-            card_validation_code: "123"
+            card_number: '4242424242424242',
+            expiration_month: '12',
+            expiration_year: '2034',
+            card_validation_code: '123'
         }
     },
     consumer_details: {
         contact: {
-            email: "abc@abc.com"
+            email: 'abc@abc.com'
         },
         name: {
-            first_name: "Test",
-            second_first_name: "Hola",
-            first_last_name: "Cash",
-            second_last_name: "User"
+            first_name: 'Test',
+            second_first_name: 'Hola',
+            first_last_name: 'Cash',
+            second_last_name: 'User'
         }
     }
 }
 
-puts 'Creating payment token...'
-create_payment_token_response = create_payment_token(create_token_request, api_key, antifraud_metadata)
-puts "Create token response: #{create_payment_token_response}"
-puts 'Token created, getting recently created token'
-token_id = create_payment_token_response['token_details']['token']
-get_token_response = get_payment_token(token_id, api_key)
-puts "Get token response: #{get_token_response}"
+if __FILE__ == $PROGRAM_NAME
+  puts 'Creating payment token...'
+  create_payment_token_response = create_payment_token(create_token_request, api_key, antifraud_metadata)
+  puts "Create token response: #{create_payment_token_response}"
+  puts 'Token created, getting recently created token'
+  token_id = create_payment_token_response['token_details']['token']
+  get_token_response = get_payment_token(token_id, api_key)
+  puts "Get token response: #{get_token_response}"
+end
