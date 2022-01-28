@@ -4,11 +4,10 @@ require 'net/https'
 require 'net/http/responses'
 require 'json'
 require 'base64'
-require_relative 'payment_token'
 
 # Creates a charge
 def create_charge(body, api_key, cash_antifraud_metadata)
-  uri = URI('https://api-v2.sandbox.holacash.mx/v2/transaction/charge')
+  uri = URI('https://sandbox.api.holacash.mx/v2/transaction/charge')
   request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   request['X-Api-Client-Key'] = api_key
   request['X-Cash-Anti-Fraud-Metadata'] = Base64.encode64(cash_antifraud_metadata.to_json).gsub("\n", '')
@@ -33,10 +32,6 @@ api_key = ENV['HOLACASH_API_KEY']
 antifraud_metadata = { ip_address: '192.168.0.100', device_id: 'somedevice_123456', user_timezone: '-06:00' }
 
 if __FILE__ == $PROGRAM_NAME
-  # ---- imported from require_relative 'payment_token'
-  create_payment_token_response = create_payment_token(CREATE_TOKEN_REQUEST, api_key, antifraud_metadata)
-  token_id = create_payment_token_response['token_details']['token']
-  # ------------------
   create_charge_request = {
     description: 'This is a test description',
     amount_details: {
@@ -46,10 +41,13 @@ if __FILE__ == $PROGRAM_NAME
     payment_detail: {
       credentials: {
         payment_method: {
-          method: 'pay_with_holacash_payment_token'
+          method: 'credit_or_debit_card'
         },
-        holacash_payment_token: {
-          payment_token: token_id
+        credit_or_debit_card: {
+          card_number: "4242424242424242",
+          expiration_month: "12",
+          expiration_year: "2024",
+          card_validation_code: "324"
         }
       }
     },
@@ -70,7 +68,7 @@ if __FILE__ == $PROGRAM_NAME
     }
   }
 
-  puts 'Creating charge with hola_cash_payment_token'
+  puts 'Creating charge with credit card'
   create_charge_w_cc_response = create_charge(create_charge_request, api_key, antifraud_metadata)
   puts "Charge created: #{create_charge_w_cc_response}"
 end

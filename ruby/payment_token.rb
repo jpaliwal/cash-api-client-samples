@@ -7,7 +7,7 @@ require 'base64'
 
 # Creates a payment token to be used when issuing charges
 def create_payment_token(body, api_key, cash_antifraud_metadata)
-  uri = URI('https://api-v2.play.holacash.mx/v2/tokenization/payment_token')
+  uri = URI('https://api-v2.sandbox.holacash.mx/v2/tokenization/payment_token')
   request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   request['X-Api-Client-Key'] = api_key
   request['X-Cash-Anti-Fraud-Metadata'] = Base64.encode64(cash_antifraud_metadata.to_json).gsub("\n", '')
