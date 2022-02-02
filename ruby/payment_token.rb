@@ -73,7 +73,7 @@ CREATE_TOKEN_REQUEST = {
 
 if __FILE__ == $PROGRAM_NAME
   puts 'Creating payment token...'
-  create_payment_token_response = create_payment_token(create_token_request, api_key, antifraud_metadata)
+  create_payment_token_response = create_payment_token(CREATE_TOKEN_REQUEST, api_key, antifraud_metadata)
   puts "Create token response: #{create_payment_token_response}"
   puts 'Token created, getting recently created token'
   token_id = create_payment_token_response['token_details']['token']
