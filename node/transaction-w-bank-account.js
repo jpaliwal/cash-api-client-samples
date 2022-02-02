@@ -7,24 +7,26 @@ const createCharge = (body, apiKey, antifraudMetadata) => {
         method: 'POST',
         headers: {
             'X-Api-Client-Key': apiKey,
-            'X-Cash-Anti-Fraud-Metadata': antifraudMetadataBase64
+            'X-Cash-Anti-Fraud-Metadata': antifraudMetadataBase64,
+            'Content-Type': 'application/json'
         },
-        json: body,
-        agent: false
     };
     const url = 'https://api-v2.sandbox.holacash.mx/v2/transaction/charge';
     return new Promise((resolve, reject) => {
-        https.request(url, options, (response) => {
-            response.on('data', (buffer) => {
-                const parsedData = JSON.parse(buffer.toString());
+        const request = https.request(url, options, (response) => {
+            let data = ''
+            response.on('data', chunk => data += chunk);
+            response.on('end', () => {
+                const parsedData = JSON.parse(data);
                 if ([200, 201].includes(response.statusCode)) {
                     resolve(parsedData);
                     return;
                 }
-
                 reject(parsedData);
             });
-        }).end();
+        }).on('error', err => reject(err));
+        request.write(JSON.stringify(body));
+        request.end();
     });
 };
 
@@ -42,10 +44,9 @@ const CREATE_CHARGE_REQUEST = {
     },
     payment_detail: {
         credentials: {
-            payment_method: {
-                method: 'pay_with_store'
-            },
-            pay_by_store_type: 'paynet'
+        payment_method: {
+            method: 'pay_with_bank_account'
+        }
         }
     },
     consumer_details: {
@@ -65,7 +66,7 @@ if (require.main === module) {
             console.log(body);
         })
         .catch((body) => {
-            console.error(body);
+            console.log(body);
         });
 }
 
