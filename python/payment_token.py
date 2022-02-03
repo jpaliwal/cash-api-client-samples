@@ -77,10 +77,12 @@ ANTIFRAUD_METADATA = {
     "user_timezone": '-06:00',
 }
 
+API_KEY = os.environ.get("HOLACASH_API_KEY")
+
 if __name__ == "__main__":
     payment_token_response = create_payment_token(
         CREATE_TOKEN_REQUEST,
-        os.environ.get("HOLACASH_API_KEY"),
+        API_KEY,
         ANTIFRAUD_METADATA,
     )
     print(json.dumps(payment_token_response))
@@ -88,6 +90,6 @@ if __name__ == "__main__":
     token_id = payment_token_response["token_details"]["token"]
     get_token_response = get_payment_token(
         token_id,
-        os.environ.get("HOLACASH_API_KEY"),
+        API_KEY,
     )
     print(json.dumps(get_token_response))
