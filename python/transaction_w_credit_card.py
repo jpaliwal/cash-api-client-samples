@@ -6,7 +6,7 @@ import json
 
 # Creates a charge
 def create_charge(body, api_key, cash_antifraud_metadata):
-    url = "https://live.api.play.holacash.mx/v2/transaction/charge"
+    url = "https://sandbox.api.holacash.mx/v2/transaction/charge"
     response = requests.post(
         url,
         headers={

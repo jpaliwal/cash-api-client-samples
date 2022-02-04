@@ -9,7 +9,7 @@ def create_payment_token(
     api_key: str,
     cash_antifraud_metadata: dict
 ) -> dict:
-    url = "https://api-v2.play.holacash.mx/v2/tokenization/payment_token"
+    url = "https://api-v2.sandbox.holacash.mx/v2/tokenization/payment_token"
     response = requests.post(
         url,
         headers={
