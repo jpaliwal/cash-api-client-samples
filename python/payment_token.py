@@ -32,7 +32,7 @@ def get_payment_token(
     api_key: str,
 ) -> dict:
     url = (
-        "https://api-v2.play.holacash.mx/v2"
+        "https://api-v2.sandbox.holacash.mx/v2"
         f"/tokenization/payment_token/{token_id}"
     )
     response = requests.get(

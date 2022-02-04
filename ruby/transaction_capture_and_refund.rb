@@ -7,7 +7,7 @@ require 'base64'
 require_relative 'transaction_w_credit_card'
 
 def capture_charge(transaction_id, body, api_key)
-  uri = URI("https://api-v2.play.holacash.mx/v2/transaction/capture/#{transaction_id}")
+  uri = URI("https://api-v2.sandbox.holacash.mx/v2/transaction/capture/#{transaction_id}")
   request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   request['X-Api-Client-Key'] = api_key
   request.body = body.to_json
