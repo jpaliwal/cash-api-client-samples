@@ -1,6 +1,8 @@
 # cash-api-client-samples
 Samples on how to use Hola Cash APIs
 
+For more information check the <a href="https://developers.holacash.mx">Developer Portal</a>
+
 ## How to run:
 
 Export an environment variable containing the api key
