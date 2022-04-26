@@ -13,7 +13,7 @@ function validateHolaCashSignature($key, $payload, $holaCashSignHeader)
 
     // To generate the string to sign you have to concat the timestamp, a dot and the JSON.
     // The JSON should be a single line without spaces (The default behaviour of stringify function)
-    $stringToSign = $timestamp . "." . json_encode(json_decode($payload, true));
+    $stringToSign = $timestamp . "." . json_encode(json_decode($payload, true), JSON_UNESCAPED_SLASHES);
 
 
     // The signature is done with HMAC_SHA256 algorithm and the key you can get from the portal (Exclusive for webhooks)
